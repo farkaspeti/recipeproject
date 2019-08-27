@@ -1,4 +1,6 @@
 package com.codecool.recipeproject.repositories;
 
-public interface CategoryRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface CategoryRepository extends CrudRepository<CategoryRepository, Long> {
 }
