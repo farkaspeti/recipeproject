@@ -4,13 +4,17 @@ import com.codecool.recipeproject.domain.*;
 import com.codecool.recipeproject.repositories.CategoryRepository;
 import com.codecool.recipeproject.repositories.RecipeRepository;
 import com.codecool.recipeproject.repositories.UnitOfMeasureRepository;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RecipeBootStrap {
+@Component
+public class RecipeBootStrap implements ApplicationListener<ContextRefreshedEvent> {
     
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
@@ -20,6 +24,11 @@ public class RecipeBootStrap {
         this.categoryRepository = categoryRepository;
         this.recipeRepository = recipeRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
+    }
+    
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        recipeRepository.saveAll(getRecepies());
     }
     
     private List<Recipe> getRecepies() {
@@ -49,7 +58,7 @@ public class RecipeBootStrap {
             throw new RuntimeException("Expected UOM not found");
         }
         
-        Optional<UnitOfMeasure> pintUomOptional = unitOfMeasureRepository.findByDescription("Pint");
+        Optional<UnitOfMeasure> pintUomOptional = unitOfMeasureRepository.findByDescription("Pinch");
         
         if (!pintUomOptional.isPresent()) {
             throw new RuntimeException("Expected UOM not found");
@@ -145,39 +154,40 @@ public class RecipeBootStrap {
                 "in the fridge and I think it adds a nice green crunch to the tacos.\n");
         spcyGrldChknTacoRecipe.setNotes(spycyGrldChknTacoNotes);
         
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("ancho chili powder", new BigDecimal(2), tableSpoonUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("dried oregano", new BigDecimal(1), teaSpoonUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("sugar", new BigDecimal(1), teaSpoonUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("dried cumin", new BigDecimal(1), teaSpoonUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("salt", new BigDecimal(1 / 2), teaSpoonUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("finely chopped garlic clove", new BigDecimal(1), numberUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("finely grated orange zest", new BigDecimal(1), tableSpoonUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("fresh squeezed orange juice", new BigDecimal(3), tableSpoonUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("olive oil", new BigDecimal(2), tableSpoonUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("chicken thighs", new BigDecimal(5), numberUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("corn tortillas", new BigDecimal(8), numberUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("baby arugula", new BigDecimal(3), cupUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("sliced ripe avocados", new BigDecimal(2), numberUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("thinly sliced radishes", new BigDecimal(4), numberUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("halved cherry tomatoes", new BigDecimal(0.5), pintUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("thinly sliced red onions", new BigDecimal(0.25), numberUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("roughly chopped cilantro", new BigDecimal(1), pintUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("sour cream", new BigDecimal(0.5), cupUom));
-        spcyGrldChknTacoRecipe.getIngredients().add(new Ingredient("wedges cut lime", new BigDecimal(1), numberUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("ancho chili powder", new BigDecimal(2), tableSpoonUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("dried oregano", new BigDecimal(1), teaSpoonUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("sugar", new BigDecimal(1), teaSpoonUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("dried cumin", new BigDecimal(1), teaSpoonUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("salt", new BigDecimal(1 / 2), teaSpoonUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("finely chopped garlic clove", new BigDecimal(1), numberUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("finely grated orange zest", new BigDecimal(1), tableSpoonUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("fresh squeezed orange juice", new BigDecimal(3), tableSpoonUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("olive oil", new BigDecimal(2), tableSpoonUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("chicken thighs", new BigDecimal(5), numberUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("corn tortillas", new BigDecimal(8), numberUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("baby arugula", new BigDecimal(3), cupUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("sliced ripe avocados", new BigDecimal(2), numberUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("thinly sliced radishes", new BigDecimal(4), numberUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("halved cherry tomatoes", new BigDecimal(0.5), pintUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("thinly sliced red onions", new BigDecimal(0.25), numberUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("roughly chopped cilantro", new BigDecimal(1), pintUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("sour cream", new BigDecimal(0.5), cupUom));
+        spcyGrldChknTacoRecipe.addIngredient(new Ingredient("wedges cut lime", new BigDecimal(1), numberUom));
+        
         spcyGrldChknTacoRecipe.getCategories().add(mexicanCategory);
         spcyGrldChknTacoRecipe.getCategories().add(americanCategory);
         
         
         //Sautéed Zucchini with Dill
-        Recipe sautdZuchWdDill = new Recipe();
-        sautdZuchWdDill.setDescription("This sautéed zucchini with dill is such a simple and easy side " +
+        Recipe sautdZuchWdDillRecepie = new Recipe();
+        sautdZuchWdDillRecepie.setDescription("This sautéed zucchini with dill is such a simple and easy side " +
                 "dish for summer meals. Six ingredients. Takes 15 minutes. " +
                 "Great on its own, or serve with grilled chicken or fish.");
-        sautdZuchWdDill.setPrepTime(5);
-        sautdZuchWdDill.setCookTime(25);
-        sautdZuchWdDill.setServings(7);
-        sautdZuchWdDill.setDifficulty(Difficulty.EASY);
-        sautdZuchWdDill.setDirections("1 Prepare the zucchini: Cut away the stem from the zucchini and trim the bottom end. Slice the zucchini into 1/8-inch rounds using  a mandolin, food processor, or your very best knife skills." +
+        sautdZuchWdDillRecepie.setPrepTime(5);
+        sautdZuchWdDillRecepie.setCookTime(25);
+        sautdZuchWdDillRecepie.setServings(7);
+        sautdZuchWdDillRecepie.setDifficulty(Difficulty.EASY);
+        sautdZuchWdDillRecepie.setDirections("1 Prepare the zucchini: Cut away the stem from the zucchini and trim the bottom end. Slice the zucchini into 1/8-inch rounds using  a mandolin, food processor, or your very best knife skills." +
                 "2 Cook the zucchini in two batches: In a large skillet, heat 2 tablespoons of the olive oil over medium-high heat. Add half the zucchini. Cook without stirring for 4 minutes, or until some of the rounds are golden when you lift them with a spatula.\n" +
                 "Sprinkle with 1/4 teaspoon of the salt and 1/8 teaspoon of the pepper. Turn and cook 2 minutes more without disturbing or until more rounds are brown. Do this two more times. Not all the rounds will be browned but a lot of them will be. Transfer to a bowl.\n" +
                 "Cook the second batch of zucchini with the remaining 2 tablespoons oil in the same way. Return all the zucchini to the pan." +
@@ -190,18 +200,19 @@ public class RecipeBootStrap {
                 "I like to use a mandoline to slice the zucchini into thin, uniform circles, but you can also use a food processor with a slicing blade. If the opening of your food processor is too small for whole zucchini, halve them lengthwise to make half-coins.\n" +
                 "I like to add fresh dill and lemon zest to my sauté. They add just the right aromatics to the zucchini.\n" +
                 "With only six ingredients and about 15 minutes of your time, you have a beautiful vegetable dish for your summer table.\n");
+        sautdZuchWdDillRecepie.setNotes(sautdZuchWdDillNotes);
         
-        sautdZuchWdDill.getIngredients().add(new Ingredient("medium zucchini", new BigDecimal(6), numberUom));
-        sautdZuchWdDill.getIngredients().add(new Ingredient("olive oil", new BigDecimal(4), tableSpoonUom));
-        sautdZuchWdDill.getIngredients().add(new Ingredient("salt", new BigDecimal(0.5), teaSpoonUom));
-        sautdZuchWdDill.getIngredients().add(new Ingredient("ground black pepper", new BigDecimal(0.25), teaSpoonUom));
-        sautdZuchWdDill.getIngredients().add(new Ingredient("chopped fresh dill", new BigDecimal(2), tableSpoonUom));
-        sautdZuchWdDill.getIngredients().add(new Ingredient("finely chopped garlic clove", new BigDecimal(1), numberUom));
-        sautdZuchWdDill.getCategories().add(americanCategory);
+        sautdZuchWdDillRecepie.addIngredient(new Ingredient("medium zucchini", new BigDecimal(6), numberUom));
+        sautdZuchWdDillRecepie.addIngredient(new Ingredient("olive oil", new BigDecimal(4), tableSpoonUom));
+        sautdZuchWdDillRecepie.addIngredient(new Ingredient("salt", new BigDecimal(0.5), teaSpoonUom));
+        sautdZuchWdDillRecepie.addIngredient(new Ingredient("ground black pepper", new BigDecimal(0.25), teaSpoonUom));
+        sautdZuchWdDillRecepie.addIngredient(new Ingredient("chopped fresh dill", new BigDecimal(2), tableSpoonUom));
+        sautdZuchWdDillRecepie.addIngredient(new Ingredient("finely chopped garlic clove", new BigDecimal(1), numberUom));
+        sautdZuchWdDillRecepie.getCategories().add(americanCategory);
         
         
         recipes.add(spcyGrldChknTacoRecipe);
-        recipes.add(sautdZuchWdDill);
+        recipes.add(sautdZuchWdDillRecepie);
         
         return recipes;
     }
